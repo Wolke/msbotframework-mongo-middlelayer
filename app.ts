@@ -6,10 +6,16 @@ let connector = new builder.ConsoleConnector().listen();
 
 var bot = new builder.UniversalBot(connector)
     .set("storage", new Storage.default({
-        DatabaseName: "test",
-        mongoIp: "127.0.0.1",
-        mongoPort: "27017",
-        collectionName: "gogo"
+        DatabaseName: "abc123456",
+        // mongoIp: "127.0.0.1",
+        // mongoPort: "27017",
+        mongoIp: "ds125578.mlab.com",
+        mongoPort: "25578",
+  
+        collectionName: "botState",
+        
+        username:"myUserAdmin",
+        password:"testtest123"
     }, {
             gzipData: false
         }));

@@ -13,10 +13,11 @@ interface Conf {
     DatabaseName: string,
     mongoIp: string,
     mongoPort: string,
-    collectionName: string
+    collectionName: string,
+    username?: string,
+    password?: string
+
 }
-
-
 
 const mongoDbConnection = (conf: Conf, callback: any) => {
 
@@ -31,9 +32,22 @@ const mongoDbConnection = (conf: Conf, callback: any) => {
         else {
             console.log("database connection successfully in connection class")
             connectionInstance = databaseConnection;
-            callback(null, databaseConnection);
+            if (conf.username && conf.password) {
+                db.authenticate(conf.username, conf.password, null, function (error: Error, result: any) {
+                    console.log("result", result)
+                    if (result) {
+                        callback(null, databaseConnection);
+                    } else {
+                        throw error
+                    }
+                })
+            } else {
+                callback(null, databaseConnection);
+            }
         }
     });
+
+
 
 }
 
