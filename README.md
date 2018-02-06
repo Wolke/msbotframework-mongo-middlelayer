@@ -10,6 +10,14 @@ Bot builder with Mongo Db(custom storage )
 ## Introduction 
 mongodb connect to botframework stroage
 
+
+# Installation
+
+```bash
+npm install --save botbuilder-mongodb-storage
+```
+
+
 ## Code Sample
 
 ```js
