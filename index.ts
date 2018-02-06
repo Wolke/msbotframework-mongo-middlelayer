@@ -20,7 +20,6 @@ interface Conf {
 }
 
 const mongoDbConnection = (conf: Conf, callback: any) => {
-
     if (connectionInstance) {
         callback(null, connectionInstance);
         return;
@@ -46,9 +45,18 @@ const mongoDbConnection = (conf: Conf, callback: any) => {
             }
         }
     });
+}
 
-
-
+function connectDb(conf: Conf) {
+    return new Promise(function (resolve, reject) {
+        mongoDbConnection(conf, (err: Error, database: any) => {
+            if (err) {
+                throw err;
+            }
+            // console.log("mongoDbConnection", mongoDbConnection)
+            resolve(database)
+        })
+    });
 }
 
 class IStorageClient {
@@ -62,17 +70,18 @@ class IStorageClient {
         this.conf = conf;
         this.client = require('mongodb').MongoClient;
 
-        mongoDbConnection(conf, (err: Error, database: any) => {
-            if (err) {
-                throw err;
-            }
-            this.database = database;
-            this.collection = database.collection(conf.collectionName);
+        // this.database = connectDb(this.conf).then();
+        // this.collection = this.database.collection(conf.collectionName);
 
-        })
-    }
-    retrieve(partitionKey: string, rowKey: string, callback: any) {
+    } x
+
+    async retrieve(partitionKey: string, rowKey: string, callback: any) {
+        if (this.database === undefined) {
+            this.database = await connectDb(this.conf);
+            this.collection = this.database.collection(this.conf.collectionName);
+        }
         var id = partitionKey + ',' + rowKey;
+
         if (rowKey !== "userData") {
             var query = { "$and": [{ "userid": id }] }
             // console.log("=========retrieve===========", "begin","query",query)
@@ -114,8 +123,12 @@ class IStorageClient {
             });
         }
     }
-    insertOrReplace(partitionKey: string, rowKey: string, entity: string, isCompressed: boolean, callback: any) {
+    async insertOrReplace(partitionKey: string, rowKey: string, entity: string, isCompressed: boolean, callback: any) {
         // console.log("=========insertOrReplace===========", "begin",partitionKey,rowKey,entity,isCompressed)
+        if (this.database === undefined) {
+            this.database = await connectDb(this.conf);
+            this.collection = this.database.collection(this.conf.collectionName);
+        }
 
         var id = partitionKey + ',' + rowKey
         var docDbEntity = { id: partitionKey + ',' + rowKey, data: entity, isCompressed: isCompressed };
@@ -151,19 +164,24 @@ class IStorageClient {
 
 export default class implements IBotStorage {
     storageClient: any;
-    options: {
-        gzipData: boolean
-    }
-    constructor(conf: Conf, options: {
-        gzipData: boolean
-    }) {
-        this.options = options;
+    conf: Conf;
+
+    constructor(conf: Conf
+        // , options: {
+        // gzipData: boolean
+        // }
+    ) {
         console.log("=========initializeStorageClient===========")
+        this.conf = conf;
         this.storageClient = new IStorageClient(conf);
 
     }
     getData(context: any, callback: any) {
-        // console.log("=========getData===========", context)
+        console.log("=========getData===========")
+        if (this.storageClient === null) {
+            this.storageClient = new IStorageClient(this.conf);
+        }
+        // return;
         var storageClient = this.storageClient;
         var list = [];
         if (context.userId) {
@@ -271,23 +289,24 @@ export default class implements IBotStorage {
         }
 
         async.each(list, function (entry: any, errorCallback: any) {
-            if (_this.options.gzipData) {
-                zlib.gzip(entry.hash, function (err: any, result: any) {
-                    if (!err && result.length > Consts.maxDataLength) {
-                        err = new Error("Data of " + result.length + " bytes gzipped exceeds the " + Consts.maxDataLength + " byte limit. Can't post to: " + entry.url);
-                        err.code = Consts.ErrorCodes.MessageSize;
-                    }
-                    if (!err) {
-                        _this.storageClient.insertOrReplace(entry.partitionKey, entry.rowKey, result.toString('base64'), true, function (error: any, eTag: any, response: any) {
-                            errorCallback(error);
-                        });
-                    }
-                    else {
-                        errorCallback(err);
-                    }
-                });
-            }
-            else if (entry.hash.length < Consts.maxDataLength) {
+            // if (_this.options.gzipData) {
+            //     zlib.gzip(entry.hash, function (err: any, result: any) {
+            //         if (!err && result.length > Consts.maxDataLength) {
+            //             err = new Error("Data of " + result.length + " bytes gzipped exceeds the " + Consts.maxDataLength + " byte limit. Can't post to: " + entry.url);
+            //             err.code = Consts.ErrorCodes.MessageSize;
+            //         }
+            //         if (!err) {
+            //             _this.storageClient.insertOrReplace(entry.partitionKey, entry.rowKey, result.toString('base64'), true, function (error: any, eTag: any, response: any) {
+            //                 errorCallback(error);
+            //             });
+            //         }
+            //         else {
+            //             errorCallback(err);
+            //         }
+            //     });
+            // }
+            // else 
+            if (entry.hash.length < Consts.maxDataLength) {
                 _this.storageClient.insertOrReplace(entry.partitionKey, entry.rowKey, entry.botData, false, function (error: any, eTag: any, response: any) {
                     errorCallback(error);
                 });

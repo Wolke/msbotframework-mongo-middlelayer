@@ -2,23 +2,19 @@ import * as Storage from "./index"
 import * as builder from "botbuilder"
 
 let connector = new builder.ConsoleConnector().listen();
-
-
 var bot = new builder.UniversalBot(connector)
     .set("storage", new Storage.default({
         DatabaseName: "abc123456",
         // mongoIp: "127.0.0.1",
         // mongoPort: "27017",
         mongoIp: "ds125578.mlab.com",
-        mongoPort: "25578",
+        mongoPort: "255xx",
   
         collectionName: "botState",
         
         username:"myUserAdmin",
         password:"testtest123"
-    }, {
-            gzipData: false
-        }));
+    }));
 
 bot.use(builder.Middleware.dialogVersion({ version: 3.0, resetCommand: /^reset/i }));
 
