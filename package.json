@@ -1,5 +1,5 @@
 {
-  "name": "botbuilder-MongoDbStorage",
+  "name": "botbuilder-mongodb-storage",
   "version": "0.0.1",
   "description": "botframework mongodb storage",
   "scripts": {
