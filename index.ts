@@ -69,11 +69,7 @@ class IStorageClient {
     constructor(conf: Conf) {
         this.conf = conf;
         this.client = require('mongodb').MongoClient;
-
-        // this.database = connectDb(this.conf).then();
-        // this.collection = this.database.collection(conf.collectionName);
-
-    } x
+    } 
 
     async retrieve(partitionKey: string, rowKey: string, callback: any) {
         if (this.database === undefined) {
@@ -142,8 +138,6 @@ class IStorageClient {
             };
             this.database.collection(this.conf.collectionName).update(conditions1, updateobj1, { upsert: true }, function (err: Error, res: any) {
                 console.log("=========insertOrReplace===========", "err", err, "conditions1", conditions1, "entity", entity);
-
-
                 callback(err, null, "");
             });
         } else {
@@ -155,7 +149,6 @@ class IStorageClient {
             }
             this.database.collection(this.conf.collectionName).update(conditions, update, { upsert: true }, function (err: Error, res: any) {
                 console.log("=========insertOrReplace===========", "err", err, "conditions", conditions, "entity", entity);
-
                 callback(err, null, "");
             })
         }
