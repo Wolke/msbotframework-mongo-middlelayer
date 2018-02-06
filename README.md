@@ -22,7 +22,7 @@ npm install --save botbuilder-mongodb-storage
 
 ```js
 var bot = new builder.UniversalBot(connector)
-    .set("storage", new Storage.default({
+    .set("storage", new MongoDbStorage({
         DatabaseName: "abc123456",
         collectionName: "botState",
         // mongoIp: "127.0.0.1",

@@ -113,7 +113,7 @@ class IStorageClient {
     }
     insertOrReplace(partitionKey, rowKey, entity, isCompressed, callback) {
         return __awaiter(this, void 0, void 0, function* () {
-            // console.log("=========insertOrReplace===========", "begin",partitionKey,rowKey,entity,isCompressed)
+            console.log("=========insertOrReplace===========", "begin", partitionKey, rowKey, entity, isCompressed);
             if (this.database === undefined) {
                 this.database = yield connectDb(this.conf);
                 this.collection = this.database.collection(this.conf.collectionName);

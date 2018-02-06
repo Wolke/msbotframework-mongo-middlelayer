@@ -120,7 +120,7 @@ class IStorageClient {
         }
     }
     async insertOrReplace(partitionKey: string, rowKey: string, entity: string, isCompressed: boolean, callback: any) {
-        // console.log("=========insertOrReplace===========", "begin",partitionKey,rowKey,entity,isCompressed)
+        console.log("=========insertOrReplace===========", "begin",partitionKey,rowKey,entity,isCompressed)
         if (this.database === undefined) {
             this.database = await connectDb(this.conf);
             this.collection = this.database.collection(this.conf.collectionName);

@@ -1,6 +1,6 @@
 {
   "name": "botbuilder-mongodb-storage",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "botframework mongodb storage",
   "scripts": {
     "main": "index.js"
@@ -11,7 +11,6 @@
   },
   "devDependencies": {
     "@types/node": "^9.4.0"
-   
   },
   "repository": {
     "type": "git",
