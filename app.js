@@ -1,30 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Storage = require("./index");
-var builder = require("botbuilder");
-var connector = new builder.ConsoleConnector().listen();
+const index_1 = require("./index");
+const builder = require("botbuilder");
+let connector = new builder.ConsoleConnector().listen();
 var bot = new builder.UniversalBot(connector)
-    .set("storage", new Storage.default({
+    .set("storage", new index_1.MongoDbStorage({
     DatabaseName: "abc123456",
     // mongoIp: "127.0.0.1",
     // mongoPort: "27017",
     mongoIp: "ds125578.mlab.com",
-    mongoPort: "25578",
+    mongoPort: "255xx",
     collectionName: "botState",
     username: "myUserAdmin",
     password: "testtest123"
-}, {
-    gzipData: false
 }));
 bot.use(builder.Middleware.dialogVersion({ version: 3.0, resetCommand: /^reset/i }));
 bot.dialog("/", [
-    function (s) { builder.Prompts.text(s, "name?"); },
-    function (s, r) {
+    s => { builder.Prompts.text(s, "name?"); },
+    (s, r) => {
         s.userData.name = r.response;
         console.log("after name", s.userData);
         builder.Prompts.number(s, "age?");
     },
-    function (s, r) {
+    (s, r) => {
         console.log("after age", s.userData);
         s.userData.age = r.response;
         s.endDialog("bady " + s.userData.name);

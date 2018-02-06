@@ -155,7 +155,7 @@ class IStorageClient {
     }
 }
 
-export default class implements IBotStorage {
+export class MongoDbStorage implements IBotStorage {
     storageClient: any;
     conf: Conf;
 

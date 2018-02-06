@@ -1,19 +1,19 @@
-import * as Storage from "./index"
+import { MongoDbStorage } from "./index"
 import * as builder from "botbuilder"
 
 let connector = new builder.ConsoleConnector().listen();
 var bot = new builder.UniversalBot(connector)
-    .set("storage", new Storage.default({
+    .set("storage", new MongoDbStorage({
         DatabaseName: "abc123456",
         // mongoIp: "127.0.0.1",
         // mongoPort: "27017",
         mongoIp: "ds125578.mlab.com",
         mongoPort: "255xx",
-  
+
         collectionName: "botState",
-        
-        username:"myUserAdmin",
-        password:"testtest123"
+
+        username: "myUserAdmin",
+        password: "testtest123"
     }));
 
 bot.use(builder.Middleware.dialogVersion({ version: 3.0, resetCommand: /^reset/i }));
@@ -22,15 +22,15 @@ bot.dialog("/", [
     s => { builder.Prompts.text(s, "name?") },
     (s, r) => {
         s.userData.name = r.response;
-        console.log("after name",s.userData)
+        console.log("after name", s.userData)
         builder.Prompts.number(s, "age?")
     },
-    (s, r) => { 
-        console.log("after age",s.userData)
-    
+    (s, r) => {
+        console.log("after age", s.userData)
+
         s.userData.age = r.response
-        
-        s.endDialog("bady " + s.userData.name) 
+
+        s.endDialog("bady " + s.userData.name)
     }
 
 ])
