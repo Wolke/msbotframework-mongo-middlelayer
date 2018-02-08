@@ -1,8 +1,8 @@
 
 # botbuilder-MongoDbStorage
 Microsoft Bot Framework V3 Mongo Db(custom storage )
-[![npm version](https://badge.fury.io/js/botbuilder-MongoDbStorage.svg)](https://badge.fury.io/js/botbuilder-MongoDbStorage)
-[![dependencies Status](https://david-dm.org/Wolke/botbuilder-MongoDbStorage/status.svg)](https://david-dm.org/Wolke/botbuilder-MongoDbStorage)
+[![npm version](https://badge.fury.io/js/botbuilder-mongodb-storage.svg)](https://badge.fury.io/js/botbuilder-mongodb-storage)
+[![dependencies Status](https://david-dm.org/Wolke/botbuilder-mongodb-storage/status.svg)](https://david-dm.org/Wolke/botbuilder-mongodb-storage)
 
 # BotBuilder-MongoDB
 Bot builder with Mongo Db(custom storage )
