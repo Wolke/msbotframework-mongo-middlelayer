@@ -21,6 +21,7 @@ npm install --save botbuilder-mongodb-storage
 ## Code Sample
 
 ```js
+import { MongoDbStorage } from "botbuilder-mongodb-storage"
 var bot = new builder.UniversalBot(connector)
     .set("storage", new MongoDbStorage({
         DatabaseName: "abc123456",
