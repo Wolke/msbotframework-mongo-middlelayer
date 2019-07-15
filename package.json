@@ -1,6 +1,6 @@
 {
   "name": "botbuilder-mongodb-storage",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "botframework mongodb storage",
   "scripts": {
     "main": "index.js"

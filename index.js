@@ -16,36 +16,41 @@ var Connection = require('mongodb').Connection;
 var Server = require('mongodb').Server;
 var connectionInstance;
 var async = require('async');
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
 const mongoDbConnection = (conf, callback) => {
     if (connectionInstance) {
         callback(null, connectionInstance);
         return;
     }
-    var db = new Db(conf.DatabaseName, new Server(conf.mongoIp, conf.mongoPort, { auto_reconnect: true }));
-    db.open(function (error, databaseConnection) {
-        //if (error) throw new Error(error);
-        if (error) {
-            callback(error, null);
-        }
-        else {
-            console.log("database connection successfully in connection class");
-            connectionInstance = databaseConnection;
-            if (conf.username && conf.password) {
-                db.authenticate(conf.username, conf.password, null, function (error, result) {
-                    console.log("result", result);
-                    if (result) {
-                        callback(null, databaseConnection);
-                    }
-                    else {
-                        throw error;
-                    }
-                });
-            }
-            else {
-                callback(null, databaseConnection);
-            }
-        }
+    MongoClient.connect(conf.mongodbUrl, function (err, db) {
+        assert.equal(null, err);
+        console.log("Connected correctly to server");
+        connectionInstance = db;
+        callback(null, connectionInstance);
+        // db.close();
     });
+    // var db = new Db(conf.DatabaseName, new Server(conf.mongoIp, conf.mongoPort, { auto_reconnect: true }));
+    // db.open(function (error: any, databaseConnection: any) {
+    //     //if (error) throw new Error(error);
+    //     if (error) { callback(error, null) }
+    //     else {
+    //         console.log("database connection successfully in connection class")
+    //         connectionInstance = databaseConnection;
+    //         if (conf.username && conf.password) {
+    //             db.authenticate(conf.username, conf.password, null, function (error: Error, result: any) {
+    //                 console.log("result", result)
+    //                 if (result) {
+    //                     callback(null, databaseConnection);
+    //                 } else {
+    //                     throw error
+    //                 }
+    //             })
+    //         } else {
+    //             callback(null, databaseConnection);
+    //         }
+    //     }
+    // });
 };
 function connectDb(conf) {
     return new Promise(function (resolve, reject) {
@@ -150,9 +155,9 @@ class IStorageClient {
 }
 class MongoDbStorage {
     constructor(conf
-        // , options: {
-        // gzipData: boolean
-        // }
+    // , options: {
+    // gzipData: boolean
+    // }
     ) {
         console.log("=========initializeStorageClient===========");
         this.conf = conf;
